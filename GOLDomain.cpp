@@ -1,5 +1,6 @@
 #include "ppp/GOLDomain.ppp"
 #include "px/externs.px"
+#include <iostream>
 
 DEFINE_TOrangeVector_classDescription(PGOL_SubGoal, "TGOL_SubGoalList", true, ORANGOL_API)
 DEFINE_TOrangeVector_classDescription(PGOL_Goal, "TGOL_GoalList", true, ORANGOL_API)
@@ -36,22 +37,22 @@ PGOL_SubGoalList TGOL_State::subGoals() const
         // loop over all possible changes 
         for (int operi = 0; operi < TGOL_SubGoal::External; operi++)
         {
-            const TGOL_SubGoal::Operator oper = (TGOL_SubGoal::Operator) operi;
+            //const TGOL_SubGoal::Operator oper = (TGOL_SubGoal::Operator) operi;
             const TFloatVariable *fvar = (domain->attributes->at(ai)).AS(TFloatVariable);
             const TEnumVariable *evar = (domain->attributes->at(ai)).AS(TEnumVariable);
             if (fvar) // dealing with a float variable;
             {
-                if (oper == TGOL_SubGoal::Increase ||
-                    oper == TGOL_SubGoal::Decrease ||
-                    oper == TGOL_SubGoal::NonIncrease ||
-                    oper == TGOL_SubGoal::NonDecrease)
+                if (operi == TGOL_SubGoal::Increase ||
+                    operi == TGOL_SubGoal::Decrease ||
+                    operi == TGOL_SubGoal::NonIncrease ||
+                    operi == TGOL_SubGoal::NonDecrease)
                 {   
-                    TGOL_SubGoal * sg = mlnew TGOL_SubGoal(ai, oper, false, domain);
+                    TGOL_SubGoal * sg = mlnew TGOL_SubGoal(ai, operi, false, domain);
                     sglist->push_back(sg);
-                    if ( oper == TGOL_SubGoal::NonIncrease ||
-                         oper == TGOL_SubGoal::NonDecrease)
+                    if ( operi == TGOL_SubGoal::NonIncrease ||
+                         operi == TGOL_SubGoal::NonDecrease)
                     {
-                        sg = mlnew TGOL_SubGoal(ai, oper, true, domain);
+                        sg = mlnew TGOL_SubGoal(ai, operi, true, domain);
                         sglist->push_back(sg);
                     }
                 }
@@ -59,13 +60,13 @@ PGOL_SubGoalList TGOL_State::subGoals() const
             }
             else if (evar)  // dealing with a discrete variable
             {
-                if (oper == TGOL_SubGoal::NoChange)
-                {   TGOL_SubGoal * sg = mlnew TGOL_SubGoal(ai, oper, false, domain);
+                if (operi == TGOL_SubGoal::NoChange)
+                {   TGOL_SubGoal * sg = mlnew TGOL_SubGoal(ai, operi, false, domain);
                     sglist->push_back(sg);
-                    sg = mlnew TGOL_SubGoal(ai, oper, true, domain);
+                    sg = mlnew TGOL_SubGoal(ai, operi, true, domain);
                     sglist->push_back(sg);
                 }
-                else if (oper == TGOL_SubGoal::Equals)
+                else if (operi == TGOL_SubGoal::Equals)
                 {
                     // iterate over attribute's values
                     const int values_size = evar->values->size();
@@ -75,7 +76,7 @@ PGOL_SubGoalList TGOL_State::subGoals() const
                         PValueList wValues = values;
                         wValues->push_back(TValue(vi));
 
-                        TGOL_SubGoal * sg = mlnew TGOL_SubGoal(ai, oper, false, domain, wValues);
+                        TGOL_SubGoal * sg = mlnew TGOL_SubGoal(ai, operi, false, domain, wValues);
                         sglist->push_back(sg);
                     }
                 }
@@ -169,13 +170,17 @@ TGOL_Goal::~TGOL_Goal(void)
 
 string TGOL_Goal::toString(void) const
 {
+    printf("in to string ... \n");
     stringstream s;
     int size = subGoals->size();
+    cout << "size: " << size;
     for (int i = 0; i < size; i++) {
         s << subGoals->at(i)->toString();
         if (i < size-1)
             s << ",";
     }
+    cout << "out of string\n";
+    cout << s.str() << "\n";
     return s.str();
 }
 
@@ -216,7 +221,7 @@ TGOL_SubGoal::TGOL_SubGoal(void)
   domain(NULL)
 {}
 
-TGOL_SubGoal::TGOL_SubGoal(int p, TGOL_SubGoal::Operator op, bool hg, PDomain domain, PValueList vl)
+TGOL_SubGoal::TGOL_SubGoal(int p, int op, bool hg, PDomain domain, PValueList vl)
 : position(p),
   values(vl),
   oper(op),
@@ -282,20 +287,28 @@ string TGOL_SubGoal::toString(void) const
     stringstream strvals;
     stringstream shortDesc;
     shortDesc << position << "|" << oper << "|" << holdingGoal;
+    cout << position << "|" << oper << "|" << holdingGoal;
+
     if (values)
     {
         strvals << " ";
         int vi = 0;
+        cout << "in values " << strvals.str() << " \n";
         const_PITERATE(TValueList, v, values)
         {
             if (vi > 0)
                 strvals << "/";
             shortDesc << "|";
+            cout << "1";
+            cout << " i " << vi << "\n";
+            cout << strvals.str() << "\n";
             if ((*v).varType == (*v).INTVAR)
             {
                 PVariable tmpv = domain->attributes->at(position);
                 TEnumVariable * ev = dynamic_cast<TEnumVariable *>(tmpv.getUnwrappedPtr());
+                cout << "vals " << ev->values->at((*v).intV) << "\n";
                 strvals << ev->values->at((*v).intV);
+                cout << strvals.str() << "\n";
                 shortDesc << (*v).intV;
             }
             if ((*v).varType == (*v).FLOATVAR)
@@ -309,9 +322,35 @@ string TGOL_SubGoal::toString(void) const
     else 
         strvals << "";
 
-
+                cout << strvals.str() << "\n";
+    cout << "short " <<  shortDesc.str() << "\n";
+                cout << strvals.str() << "\n";
+    cout << "oper " <<  oper << "\n";
+                cout << strvals.str() << "\n";
+    cout << "operator str " <<  operatorString(oper) << "\n";
+                cout << strvals.str() << "\n";
+    cout << "name  " <<  domain->attributes->at(position)->get_name() << "\n";
+    cout << "kr neki prej prej prej \n";
+    cout << "kr neki prej prej prej \n";
+    cout << "kr neki prej prej prej \n";
+    cout << "kr neki prej prej prej \n";
+    cout << "kr neki prej prej prej \n";
+    cout << "kr neki prej prej prej \n";
+    cout << "str vals  " <<  strvals.str() << "\n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << "kr neki \n";
+    cout << flush;
     stringstream s;
     s << "[" << shortDesc.str() << "]" << domain->attributes->at(position)->get_name() << " " << operatorString(oper) << hold << strvals.str();
+    cout << "s" << s << "\n";
+    cout << flush;
     return s.str();
 }
 

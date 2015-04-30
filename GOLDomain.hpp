@@ -119,7 +119,7 @@ public:
 class ORANGOL_API TGOL_SubGoal : public TOrange {
 public:
   __REGISTER_CLASS
-    CLASSCONSTANTS(Operator) enum Operator { NoChange, Increase, Decrease, NonIncrease, NonDecrease, Equals, GreaterThan, LessThan, External};
+    CLASSCONSTANTS(Operator) enum { NoChange, Increase, Decrease, NonIncrease, NonDecrease, Equals, GreaterThan, LessThan, External};
 
     int oper; //P Subgoal's operator
     int position; //P position of variable to compare
@@ -128,7 +128,8 @@ public:
     PDomain domain; //P orange domain of attributes
 
     TGOL_SubGoal(void);
-    TGOL_SubGoal(int, TGOL_SubGoal::Operator, bool, PDomain, PValueList = PValueList());
+    //TGOL_SubGoal(int, TGOL_SubGoal::Operator, bool, PDomain, PValueList = PValueList());
+    TGOL_SubGoal(int, int, bool, PDomain, PValueList = PValueList());
     ~TGOL_SubGoal(void);
 
     // Is goal achieved in given start and end positions?

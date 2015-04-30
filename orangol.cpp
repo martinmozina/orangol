@@ -64,8 +64,8 @@ PyObject *GOL_SubGoal_new(PyObject *self, PyObject *args, PyObject *keywords) PY
     if (!PyArg_ParseTuple(args, "iibO&|O&:GOL_SubGoal.new", &position, &operi, &holdingGoal, cc_Domain, &domain, cc_ValueList, &values))
       return PYNULL;
 
-    TGOL_SubGoal::Operator oper = (TGOL_SubGoal::Operator)operi;
-    TGOL_SubGoal *sg = new TGOL_SubGoal(position, oper, holdingGoal, domain, values);
+    //TGOL_SubGoal::Operator oper = (TGOL_SubGoal::Operator)operi;
+    TGOL_SubGoal *sg = new TGOL_SubGoal(position, operi, holdingGoal, domain, values);
     PGOL_SubGoal wsg = sg;
     return WrapOrange(wsg);
   PyCATCH
