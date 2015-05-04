@@ -170,17 +170,14 @@ TGOL_Goal::~TGOL_Goal(void)
 
 string TGOL_Goal::toString(void) const
 {
-    printf("in to string ... \n");
     stringstream s;
     int size = subGoals->size();
-    cout << "size: " << size;
     for (int i = 0; i < size; i++) {
         s << subGoals->at(i)->toString();
         if (i < size-1)
             s << ",";
     }
-    cout << "out of string\n";
-    cout << s.str() << "\n";
+    //cout << s.str() << "\n";
     return s.str();
 }
 
@@ -287,28 +284,21 @@ string TGOL_SubGoal::toString(void) const
     stringstream strvals;
     stringstream shortDesc;
     shortDesc << position << "|" << oper << "|" << holdingGoal;
-    cout << position << "|" << oper << "|" << holdingGoal;
 
     if (values)
     {
         strvals << " ";
         int vi = 0;
-        cout << "in values " << strvals.str() << " \n";
         const_PITERATE(TValueList, v, values)
         {
             if (vi > 0)
                 strvals << "/";
             shortDesc << "|";
-            cout << "1";
-            cout << " i " << vi << "\n";
-            cout << strvals.str() << "\n";
             if ((*v).varType == (*v).INTVAR)
             {
                 PVariable tmpv = domain->attributes->at(position);
                 TEnumVariable * ev = dynamic_cast<TEnumVariable *>(tmpv.getUnwrappedPtr());
-                cout << "vals " << ev->values->at((*v).intV) << "\n";
                 strvals << ev->values->at((*v).intV);
-                cout << strvals.str() << "\n";
                 shortDesc << (*v).intV;
             }
             if ((*v).varType == (*v).FLOATVAR)
@@ -319,38 +309,9 @@ string TGOL_SubGoal::toString(void) const
             vi+=1;
         }
     }
-    else 
-        strvals << "";
 
-                cout << strvals.str() << "\n";
-    cout << "short " <<  shortDesc.str() << "\n";
-                cout << strvals.str() << "\n";
-    cout << "oper " <<  oper << "\n";
-                cout << strvals.str() << "\n";
-    cout << "operator str " <<  operatorString(oper) << "\n";
-                cout << strvals.str() << "\n";
-    cout << "name  " <<  domain->attributes->at(position)->get_name() << "\n";
-    cout << "kr neki prej prej prej \n";
-    cout << "kr neki prej prej prej \n";
-    cout << "kr neki prej prej prej \n";
-    cout << "kr neki prej prej prej \n";
-    cout << "kr neki prej prej prej \n";
-    cout << "kr neki prej prej prej \n";
-    cout << "str vals  " <<  strvals.str() << "\n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << "kr neki \n";
-    cout << flush;
     stringstream s;
-    s << "[" << shortDesc.str() << "]" << domain->attributes->at(position)->get_name() << " " << operatorString(oper) << hold << strvals.str();
-    cout << "s" << s << "\n";
-    cout << flush;
+    s << "[" << shortDesc.str() << "]" << domain->attributes->at(position)->get_name_c() << " " << operatorString(oper) << hold << strvals.str();
     return s.str();
 }
 

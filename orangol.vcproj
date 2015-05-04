@@ -113,13 +113,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				EnableIntrinsicFunctions="true"
+				Optimization="3"
+				EnableIntrinsicFunctions="false"
 				PreprocessorDefinitions="ORANGOL_EXPORTS"
-				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="false"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -134,9 +134,11 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="orange.lib"
 				OutputFile="$(PYTHON)/lib/site-packages/orange/orangol.pyd"
-				GenerateDebugInformation="true"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
+				GenerateDebugInformation="false"
+				OptimizeReferences="0"
+				EnableCOMDATFolding="0"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				TargetMachine="1"
 			/>
 			<Tool

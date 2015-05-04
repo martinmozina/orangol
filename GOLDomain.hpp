@@ -11,7 +11,7 @@ using namespace std;
 
 #include "root.hpp"
 #include "orvector.hpp"
-#include "values.hpp"
+#include "vars.hpp"
 #include "domain.hpp"
 
 #include "px/orangol_globals.hpp"
