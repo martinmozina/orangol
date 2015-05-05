@@ -202,6 +202,11 @@ def read_rule_line(state, line):
     rule.setattr("goals", goals)
     return rule      
 
+def goal_to_str(goals):
+    subgoals = str(goals).strip().split(",")
+    goals = [re.search("\[.*\]", s).group() for s in subgoals] 
+    return ",".join(goals) 
+
 def rule_to_str(rule):
     # convert conds
     conds = []

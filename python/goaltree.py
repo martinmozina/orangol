@@ -5,6 +5,7 @@ of goal hierarchy used in goal-oriented learning.
 import random
 import Orange
 import gol
+import orangol
 
 def get_indent(s):
     position = len(s) - len(s.lstrip("\t"))
@@ -59,11 +60,14 @@ class GoalTree(object):
         self.parent_rule = parent_rule # a pointer to the rule from the parent node
 
         # are traces used in learning?
-        names = [data.domain[m].name for m in data.domain.get_metas()]
-        if "trace" in names:
-            learn_trace = True
-        else:
+        if not data:
             learn_trace = False
+        else:
+            names = [data.domain[m].name for m in data.domain.get_metas()]
+            if "trace" in names:
+                learn_trace = True
+            else:
+                learn_trace = False
         
         # compute active traces
         self.covered_traces = set()
